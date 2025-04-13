@@ -21,6 +21,7 @@ services:
     volumes:
       - ../dist:/var/lib/grafana/plugins/tang95-north-app
       - ../provisioning:/etc/grafana/provisioning
+      - ./grafana.ini:/etc/grafana/grafana.ini
       - ..:/root/tang95-north-app
 
     environment:

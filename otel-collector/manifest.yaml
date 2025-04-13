@@ -1,0 +1,25 @@
+dist:
+  name: north-otel-collector
+  description: North OTel Collector distribution for Developers
+  output_path: .
+
+exporters:
+  - gomod: go.opentelemetry.io/collector/exporter/debugexporter v0.123.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/clickhouseexporter v0.123.0
+
+processors:
+  - gomod: go.opentelemetry.io/collector/processor/batchprocessor v0.123.0
+  - gomod: go.opentelemetry.io/collector/processor/memorylimiterprocessor v0.123.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.123.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.123.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor v0.123.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.123.0
+
+receivers:
+  - gomod: go.opentelemetry.io/collector/receiver/otlpreceiver v0.123.0
+
+connectors:
+  - gomod: go.opentelemetry.io/collector/connector/forwardconnector v0.123.0
+
+extensions:
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.123.0
