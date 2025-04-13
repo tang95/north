@@ -1,12 +1,13 @@
 import { SceneAppPage } from '@grafana/scenes';
+import { baseRoute } from '../../utils/utils.routing';
 import { homeScene } from './homeScene';
-import { prefixRoute } from '../../utils/utils.routing';
-import { ROUTES } from '../../constants';
+import { JsonData } from 'components/AppConfig/AppConfig';
 
-export const homePage = new SceneAppPage({
-  title: 'Home page',
-  url: prefixRoute(ROUTES.Home),
-  subTitle:
-    'This scene showcases a basic scene functionality, including query runner, variable and a custom scene object.',
-  getScene: () => homeScene(),
-});
+export const getHomePage = (jsonData: JsonData) => {
+  return new SceneAppPage({
+    title: 'North',
+    url: baseRoute(),
+    subTitle: '基于 Grafana、OpenTelemetry 和 ClickHouse 的可观测性解决方案',
+    getScene: () => homeScene(jsonData)
+  });
+}

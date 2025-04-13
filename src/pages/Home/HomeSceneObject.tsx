@@ -2,19 +2,19 @@ import React from 'react';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Input } from '@grafana/ui';
 
-interface CustomSceneObjectState extends SceneObjectState {
+interface HomeSceneObjectState extends SceneObjectState {
   counter: number;
 }
 
-export class CustomSceneObject extends SceneObjectBase<CustomSceneObjectState> {
-  static Component = CustomSceneObjectRenderer;
+export class HomeSceneObject extends SceneObjectBase<HomeSceneObjectState> {
+  static Component = HomeSceneObjectRenderer;
 
   onValueChange = (value: number) => {
     this.setState({ counter: value });
   };
 }
 
-function CustomSceneObjectRenderer({ model }: SceneComponentProps<CustomSceneObject>) {
+function HomeSceneObjectRenderer({ model }: SceneComponentProps<HomeSceneObject>) {
   const state = model.useState();
 
   return (

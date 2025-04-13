@@ -1,18 +1,14 @@
-import React from 'react';
-import { SceneApp, useSceneApp } from '@grafana/scenes';
 import { AppRootProps } from '@grafana/data';
-import { config } from '@grafana/runtime';
+import { SceneApp } from '@grafana/scenes';
 import { Alert } from '@grafana/ui';
-import { DATASOURCE_REF } from '../../constants';
-import { PluginPropsContext } from '../../utils/utils.plugin';
-import { helloWorldPage } from '../../pages/HelloWorld/helloWorldPage';
-import { homePage } from '../../pages/Home/homePage';
-import { withDrilldownPage } from '../../pages/WithDrilldown/withDrilldownPage';
-import { withTabsPage } from '../../pages/WithTabs/withTabsPage';
+import React, { useMemo } from 'react';
+import { getHomePage } from '../../pages/Home/homePage';
+import { PluginPropsContext, usePluginJsonData } from '../../utils/utils.plugin';
+import { JsonData } from '../AppConfig/AppConfig';
 
-function getSceneApp() {
+function getSceneApp(jsonData: JsonData) {
   return new SceneApp({
-    pages: [helloWorldPage, homePage, withDrilldownPage, withTabsPage],
+    pages: [getHomePage(jsonData)],
     urlSyncOptions: {
       updateUrlOnInit: true,
       createBrowserHistorySteps: true,
@@ -21,21 +17,25 @@ function getSceneApp() {
 }
 
 function AppWithScenes() {
-  const scene = useSceneApp(getSceneApp);
+  const jsonData = usePluginJsonData();
+  const scene = useMemo(() => {
+    if (jsonData) {
+      return getSceneApp(jsonData);
+    }
+    return;
+  }, [jsonData]);
+  
+  if (!jsonData) {
+    return (
+      <Alert title={`缺少配置`}>
+        此应用需要进行配置。
+      </Alert>
+    );
+  }
 
   return (
     <>
-      {!config.datasources[DATASOURCE_REF.uid] && (
-        <Alert title={`Missing ${DATASOURCE_REF.uid} datasource`}>
-          These demos depend on <b>testdata</b> datasource: <code>{JSON.stringify(DATASOURCE_REF)}</code>. See{' '}
-          <a href="https://github.com/grafana/grafana/tree/main/devenv#set-up-your-development-environment">
-            https://github.com/grafana/grafana/tree/main/devenv#set-up-your-development-environment
-          </a>{' '}
-          for more details.
-        </Alert>
-      )}
-
-      <scene.Component model={scene} />
+      {scene && <scene.Component model={scene} />}
     </>
   );
 }

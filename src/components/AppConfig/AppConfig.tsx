@@ -3,10 +3,9 @@ import { Button, Field, Input, useStyles2, FieldSet, SecretInput } from '@grafan
 import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
 import { getBackendSrv, locationService } from '@grafana/runtime';
 import { css } from '@emotion/css';
-import { testIds } from '../testIds';
 import { lastValueFrom } from 'rxjs';
 
-type JsonData = {
+export type JsonData = {
   apiUrl?: string;
   isApiKeySet?: boolean;
 };
@@ -81,7 +80,6 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
         <Field label="API Key" description="A secret key for authenticating to our custom API">
           <SecretInput
             width={60}
-            data-testid={testIds.appConfig.apiKey}
             id="api-key"
             value={state?.apiKey}
             isConfigured={state.isApiKeySet}
@@ -96,7 +94,6 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
           <Input
             width={60}
             id="api-url"
-            data-testid={testIds.appConfig.apiUrl}
             label={`API Url`}
             value={state?.apiUrl}
             placeholder={`E.g.: http://mywebsite.com/api/v1`}
@@ -105,7 +102,7 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
         </Field>
 
         <div className={s.marginTop}>
-          <Button type="submit" data-testid={testIds.appConfig.submit} disabled={isSubmitDisabled}>
+          <Button type="submit" disabled={isSubmitDisabled}>
             Save API settings
           </Button>
         </div>
