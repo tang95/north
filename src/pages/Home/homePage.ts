@@ -1,13 +1,34 @@
-import { SceneAppPage } from '@grafana/scenes';
-import { baseRoute } from '../../utils/utils.routing';
-import { homeScene } from './homeScene';
+import { behaviors, SceneAppPage, SceneRefreshPicker, SceneTimePicker } from '@grafana/scenes';
+import { createTimeRangeVariable } from 'common/variableHelpers';
 import { JsonData } from 'components/AppConfig/AppConfig';
+import pluginJson from '../../plugin.json';
+import { prefixRoute } from '../../utils/utils.routing';
+import { getServicePage } from '../Service/servicePage';
+import { homeScene } from './homeScene';
+
 
 export const getHomePage = (jsonData: JsonData) => {
   return new SceneAppPage({
     title: 'North',
-    url: baseRoute(),
-    subTitle: '基于 Grafana、OpenTelemetry 和 ClickHouse 的可观测性解决方案',
-    getScene: () => homeScene(jsonData)
+    titleImg: `/public/plugins/${pluginJson.id}/img/logo.svg`,
+    $timeRange: createTimeRangeVariable(),
+    $behaviors: [new behaviors.SceneQueryController()],
+    controls: [
+      new SceneTimePicker({ isOnCanvas: true }),
+      new SceneRefreshPicker({
+        isOnCanvas: true,
+        primary: true,
+      }),
+    ],
+    url: prefixRoute(),
+    routePath: prefixRoute('/*'),
+    subTitle: 'Observability solution based on Grafana, OpenTelemetry and ClickHouse',
+    getScene: () => homeScene(jsonData),
+    drilldowns: [
+      {
+        routePath: prefixRoute('/:service'),
+        getPage: (routeMatch, parent) => getServicePage({ routeMatch, parent, jsonData }),
+      },
+    ],
   });
 }
