@@ -3,8 +3,6 @@
   "type": "app",
   "name": "North",
   "id": "tang95-north-app",
-  "backend": false,
-  "executable": "gpx_north",
   "info": {
     "keywords": ["app"],
     "description": "",
