@@ -1,6 +1,19 @@
 apiVersion: 1
 
 datasources:
+  - name: North
+    type: grafana-clickhouse-datasource
+    uid: north
+    isDefault: true
+    jsonData:
+      host: "clickhouse"
+      defaultDatabase: "default"
+      username: "north"
+      port: 9000
+      protocol: native
+    secureJsonData:
+      password: "north"
+
   - name: gdev-testdata
     isDefault: false
     type: testdata

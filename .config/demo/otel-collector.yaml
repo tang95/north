@@ -9,7 +9,7 @@ receivers:
 processors:
   batch:
     timeout: 5s
-    send_batch_size: 10000
+    send_batch_size: 8000
 
   memory_limiter:
     check_interval: 1s
@@ -21,7 +21,6 @@ exporters:
     endpoint: tcp://clickhouse:9000
     username: north
     password: north
-    timeout: 10s
 
 service:
   pipelines:
