@@ -8,7 +8,7 @@ x-default-logging: &logging
 
 networks:
   default:
-    name: opentelemetry-demo
+    name: north-demo
     driver: bridge
 
 services:
@@ -33,14 +33,14 @@ services:
 
   clickhouse:
     image: clickhouse/clickhouse-server:25.3
-    container_name: north-clickhouse
+    container_name: clickhouse
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
     ports:
-      - "8123"   # HTTP 接口
-      - "9000"   # 原生接口
+      - "8123:8123"   # HTTP 接口
+      - "9000:9000"   # 原生接口
     environment:
       - CLICKHOUSE_USER=north
       - CLICKHOUSE_PASSWORD=north
@@ -63,7 +63,7 @@ services:
       - AD_PORT=9555
       - FLAGD_HOST=flagd
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_LOGS_EXPORTER=otlp
       - OTEL_SERVICE_NAME=ad
     depends_on:
@@ -82,7 +82,7 @@ services:
       - FLAGD_HOST=flagd
       - VALKEY_ADDR=valkey-cart:6379
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=cart
       - ASPNETCORE_URLS=http://*:7070
     depends_on:
@@ -108,7 +108,7 @@ services:
       - PRODUCT_CATALOG_ADDR=product-catalog:3550
       - SHIPPING_ADDR=shipping:50050
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=checkout
     depends_on:
       cart:
@@ -137,7 +137,7 @@ services:
       - CURRENCY_PORT=7001
       - VERSION=2.0.2
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2,service.name=currency
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2,service.name=currency
     depends_on:
       otel-collector:
         condition: service_started
@@ -153,7 +153,7 @@ services:
       - APP_ENV=production
       - EMAIL_PORT=6060
       - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://otel-collector:4318/v1/traces
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=email
     depends_on:
       otel-collector:
@@ -177,7 +177,7 @@ services:
       - RECOMMENDATION_ADDR=recommendation:9001
       - SHIPPING_ADDR=shipping:50050
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=frontend
       - PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:8080/otlp-http/v1/traces
       - WEB_OTEL_SERVICE_NAME=frontend-web
@@ -226,7 +226,7 @@ services:
       - IMAGE_PROVIDER_PORT=8081
       - OTEL_COLLECTOR_PORT_GRPC=4317
       - OTEL_COLLECTOR_PORT_HTTP=4318
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=frontend-proxy
       - ENVOY_PORT=8080
       - FLAGD_HOST=flagd
@@ -255,7 +255,7 @@ services:
       - OTEL_COLLECTOR_HOST=otel-collector
       - OTEL_COLLECTOR_PORT_GRPC=4317
       - OTEL_SERVICE_NAME=image-provider
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
     depends_on:
       otel-collector:
         condition: service_started
@@ -274,7 +274,7 @@ services:
       - LOCUST_HEADLESS=false
       - LOCUST_AUTOSTART=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=load-generator
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
       - LOCUST_WEB_HOST=0.0.0.0
@@ -297,7 +297,7 @@ services:
       - FLAGD_HOST=flagd
       - PAYMENT_PORT=50051
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=payment
     depends_on:
       otel-collector:
@@ -315,7 +315,7 @@ services:
       - PRODUCT_CATALOG_PORT=3550
       - PRODUCT_CATALOG_RELOAD_INTERVAL=10
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=product-catalog
     volumes:
       - .config/demo/products:/usr/src/app/products
@@ -334,7 +334,7 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
       - OTEL_PHP_AUTOLOAD_ENABLED=true
       - QUOTE_PORT=8090
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=quote
       - OTEL_PHP_INTERNAL_METRICS_ENABLED=true
     depends_on:
@@ -354,7 +354,7 @@ services:
       - PRODUCT_CATALOG_ADDR=product-catalog:3550
       - OTEL_PYTHON_LOG_CORRELATION=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=recommendation
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
     depends_on:
@@ -374,7 +374,7 @@ services:
       - SHIPPING_PORT=50050
       - QUOTE_ADDR=http://quote:8090
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=shipping
     depends_on:
       otel-collector:
@@ -388,7 +388,7 @@ services:
     environment:
       - FLAGD_OTEL_COLLECTOR_URI=otel-collector:4317
       - FLAGD_METRICS_EXPORTER=otel
-      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=opentelemetry-demo,service.version=2.0.2
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=north-demo,service.version=2.0.2
       - OTEL_SERVICE_NAME=flagd
     command: [
       "start",

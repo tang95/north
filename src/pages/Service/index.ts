@@ -1,8 +1,14 @@
 import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneTimePicker } from '@grafana/scenes';
-import { createTimeRangeVariable } from 'common/variableHelpers';
+import { createTimeRangeVariable } from '../../common/variableHelpers';
 import { JsonData } from '../../components/AppConfig/AppConfig';
 import { prefixRoute } from '../../utils/utils.routing';
-import { serviceScene } from './serviceScene';
+import { getOverviewPage } from './components/overview';
+import { getLogsPage } from './components/logs';
+import { getTopologyPage } from './components/topology';
+import { getTraceSearchPage, getTraceAnalyticsPage } from './components/traces';
+import { getDashboardsPage } from './components/dashboards';
+import { getAlertsPage } from './components/alerts';
+
 
 export type ServicePageProps = {
     routeMatch: SceneRouteMatch<{ service: string }>;
@@ -26,7 +32,15 @@ export const getServicePage = (props: ServicePageProps) => {
         ],
         getParentPage: () => parent,
         url: prefixRoute(`/${service}`),
-        routePath: prefixRoute('/*'),
-        getScene: () => serviceScene(service, jsonData)
+        routePath: `*`,
+        tabs: [
+            getOverviewPage({ jsonData: jsonData, service: service }),
+            getTopologyPage({ jsonData: jsonData, service: service }),
+            getTraceAnalyticsPage({ jsonData: jsonData, service: service }),
+            getTraceSearchPage({ jsonData: jsonData, service: service }),
+            getLogsPage({ jsonData: jsonData, service: service }),
+            getDashboardsPage({ jsonData: jsonData, service: service }),
+            getAlertsPage({ jsonData: jsonData, service: service })
+        ]
     });
 }

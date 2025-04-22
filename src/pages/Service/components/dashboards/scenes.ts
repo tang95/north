@@ -1,8 +1,7 @@
 import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout } from "@grafana/scenes";
-import { JsonData } from "../../components/AppConfig/AppConfig";
+import { DashboardsProps } from "./index";
 
-
-export const serviceScene = (service: string, jsonData: JsonData) => {
+export const getDashboardsScene = (props: DashboardsProps) => {
     return new EmbeddedScene({
         controls: [],
         body: new SceneFlexLayout({

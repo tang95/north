@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'tang95-north-app'
+    container_name: 'grafana'
 
     build:
       context: .

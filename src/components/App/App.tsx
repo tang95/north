@@ -2,7 +2,7 @@ import { AppRootProps } from '@grafana/data';
 import { SceneApp } from '@grafana/scenes';
 import { Alert } from '@grafana/ui';
 import React, { useMemo } from 'react';
-import { getHomePage } from '../../pages/Home/homePage';
+import { getHomePage } from '../../pages/Home';
 import { PluginPropsContext, usePluginJsonData } from '../../utils/utils.plugin';
 import { JsonData } from '../AppConfig/AppConfig';
 
@@ -27,8 +27,8 @@ function AppWithScenes() {
   
   if (!jsonData) {
     return (
-      <Alert title={`缺少配置`}>
-        此应用需要进行配置。
+      <Alert title={`Configuration Missing`}>
+        Please configure the application to proceed.
       </Alert>
     );
   }
