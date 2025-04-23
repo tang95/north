@@ -1,20 +1,9 @@
-import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout, SceneQueryRunner } from "@grafana/scenes";
+import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout } from "@grafana/scenes";
 import { OverviewProps } from "./index";
+import { getDemoQueries } from "./queries";
 
 export const getOverviewScene = (props: OverviewProps) => {
-    const dataRunner = new SceneQueryRunner({
-        queries: [
-            {
-                refId: 'A',
-                scenarioId: "slow_query",
-                datasource: {
-                    type: "grafana-testdata-datasource",
-                    uid: "gdev-testdata"
-                },
-                stringInput: "2s"
-            },
-        ]
-    });
+    const dataRunner = getDemoQueries();
     return new EmbeddedScene({
         controls: [],
         body: new SceneFlexLayout({

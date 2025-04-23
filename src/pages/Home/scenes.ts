@@ -8,17 +8,15 @@ import {
 import { JsonData } from '../../components/AppConfig/AppConfig';
 import { HomeContentSceneObject } from './components/HomeContentSceneObject';
 import { HomeSearchSceneObject } from './components/HomeSearchSceneObject';
+import { createSortKeyVariable } from './variables';
 
 export function homeScene(jsonData: JsonData) {
-  const textVar = new TextBoxVariable({
-    name: 'text',
-  });
+  const sortKeyVar = createSortKeyVariable();
 
   return new EmbeddedScene({
-    $variables: new SceneVariableSet({ variables: [textVar] }),
+    $variables: new SceneVariableSet({ variables: [sortKeyVar] }),
     controls: [
-      new HomeSearchSceneObject({ textVar }),
-      new VariableValueSelectors({})
+      new HomeSearchSceneObject({ sortKeyVar })
     ],
     body: new HomeContentSceneObject({}),
   });

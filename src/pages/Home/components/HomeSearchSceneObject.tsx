@@ -1,4 +1,4 @@
-import { SceneComponentProps, SceneObjectBase, SceneObjectState, SceneVariableValueChangedEvent, TextBoxVariable } from '@grafana/scenes';
+import { CustomVariable, SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Button, Combobox, Icon, Input, Stack } from '@grafana/ui';
 import React, { useState } from 'react';
 
@@ -12,14 +12,8 @@ const namespaceOptions = [
   { value: 'ingress-nginx', label: 'Ingress Nginx' },
 ];
 
-const sortOptions = [
-  { value: 'successRate', label: 'Sort by Success Rate' },
-  { value: 'eventCount', label: 'Sort by Event Count' },
-  { value: 'errorCount', label: 'Sort by Error Count' },
-];
-
 interface HomeSearchSceneObjectState extends SceneObjectState {
-  textVar: TextBoxVariable;
+  sortKeyVar: CustomVariable;
 }
 
 export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObjectState> {
@@ -27,7 +21,7 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [selectedNamespace, setSelectedNamespace] = useState<string>('all');
     const [selectedSort, setSelectedSort] = useState<string>('successRate');
-
+    const { sortKeyVar } = model.state;
     return (
       <Stack width={"100%"}>
         <Combobox
@@ -39,17 +33,10 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
         <Input
           prefix={<Icon name="search" />}
           style={{ width: '100%' }}
-          defaultValue={model.state.textVar.getValue().toString()}
-          onChange={(e) => model.onTextChange(e.currentTarget.value)}
+          // onChange={(e) => model.onTextChange(e.currentTarget.value)}
           placeholder="Search services or enter Trace ID..."
         />
-        <Combobox
-          options={sortOptions}
-          value={sortOptions.find(option => option.value === selectedSort)}
-          onChange={(option) => setSelectedSort(option?.value || 'successRate')}
-          placeholder='Sort'
-          width={23}
-        />
+        <sortKeyVar.Component model={sortKeyVar} />
         <Button
           variant="secondary"
           onClick={() => {
@@ -67,8 +54,8 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
     );
   };
 
-  onTextChange = (text: string) => {
-    this.state.textVar.setState({ value: text });
-    this.publishEvent(new SceneVariableValueChangedEvent(this.state.textVar), true);
-  };
+  // onTextChange = (text: string) => {
+  //   this.state.textVar.setState({ value: text });
+  //   this.publishEvent(new SceneVariableValueChangedEvent(this.state.textVar), true);
+  // };
 }
