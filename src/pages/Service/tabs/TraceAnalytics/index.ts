@@ -1,20 +1,20 @@
 import { behaviors, SceneAppPage } from "@grafana/scenes";
 import { JsonData } from "../../../../components/AppConfig/AppConfig";
 import { prefixRoute } from "../../../../utils/utils.routing";
-import { getDashboardsScene } from "./scenes";
+import { getTraceAnalyticsScene } from "./scenes";
 
-export type DashboardsProps = {
+export type TraceAnalyticsProps = {
     service: string;
     jsonData: JsonData;
 }
 
-export const getDashboardsPage = (props: DashboardsProps) => {
+export const getTraceAnalyticsPage = (props: TraceAnalyticsProps) => {
     const { service } = props;
     return new SceneAppPage({
-        title: "Dashboards",
+        title: "Trace Analytics",
         $behaviors: [new behaviors.SceneQueryController()],
-        url: prefixRoute(`/${service}/dashboards`),
-        routePath: 'dashboards',
-        getScene: () => getDashboardsScene(props)
+        url: prefixRoute(`/${service}/trace-analytics`),
+        routePath: 'trace-analytics',
+        getScene: () => getTraceAnalyticsScene(props)
     });
 }

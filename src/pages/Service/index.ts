@@ -2,12 +2,13 @@ import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRou
 import { createTimeRangeVariable } from '../../common/variableHelpers';
 import { JsonData } from '../../components/AppConfig/AppConfig';
 import { prefixRoute } from '../../utils/utils.routing';
-import { getOverviewPage } from './components/overview';
-import { getLogsPage } from './components/logs';
-import { getTopologyPage } from './components/topology';
-import { getTraceSearchPage, getTraceAnalyticsPage } from './components/traces';
-import { getDashboardsPage } from './components/dashboards';
-import { getAlertsPage } from './components/alerts';
+import { getOverviewPage } from './tabs/Overview';
+import { getLogSearchPage } from './tabs/LogSearch';
+import { getTopologyPage } from './tabs/Topology';
+import { getTraceSearchPage } from './tabs/TraceSearch';
+import { getTraceAnalyticsPage } from './tabs/TraceAnalytics';
+import { getDashboardPage } from './tabs/Dashboard';
+import { getAlertsPage } from './tabs/Alert';
 
 
 export type ServicePageProps = {
@@ -38,8 +39,8 @@ export const getServicePage = (props: ServicePageProps) => {
             getTopologyPage({ jsonData: jsonData, service: service }),
             getTraceAnalyticsPage({ jsonData: jsonData, service: service }),
             getTraceSearchPage({ jsonData: jsonData, service: service }),
-            getLogsPage({ jsonData: jsonData, service: service }),
-            getDashboardsPage({ jsonData: jsonData, service: service }),
+            getLogSearchPage({ jsonData: jsonData, service: service }),
+            getDashboardPage({ jsonData: jsonData, service: service }),
             getAlertsPage({ jsonData: jsonData, service: service })
         ]
     });

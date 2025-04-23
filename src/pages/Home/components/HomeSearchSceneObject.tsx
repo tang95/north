@@ -1,21 +1,15 @@
-import { SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState, SceneVariableValueChangedEvent, TextBoxVariable } from '@grafana/scenes';
 import { Button, Combobox, Icon, Input, Stack } from '@grafana/ui';
 import React, { useState } from 'react';
 
-const languageOptions = [
+const namespaceOptions = [
   { value: 'all', label: 'All' },
-  { value: 'cpp', label: 'C++' },
-  { value: 'dotnet', label: 'C#' },
-  { value: 'erlang', label: 'Erlang' },
-  { value: 'go', label: 'Go' },
-  { value: 'java', label: 'Java' },
-  { value: 'nodejs', label: 'Node.js' },
-  { value: 'php', label: 'PHP' },
-  { value: 'python', label: 'Python' },
-  { value: 'ruby', label: 'Ruby' },
-  { value: 'rust', label: 'Rust' },
-  { value: 'swift', label: 'Swift' },
-  { value: 'webjs', label: 'WebJS' },
+  { value: 'default', label: 'Default' },
+  { value: 'kube-system', label: 'Kube System' },
+  { value: 'monitoring', label: 'Monitoring' },
+  { value: 'istio-system', label: 'Istio System' },
+  { value: 'cert-manager', label: 'Cert Manager' },
+  { value: 'ingress-nginx', label: 'Ingress Nginx' },
 ];
 
 const sortOptions = [
@@ -25,25 +19,28 @@ const sortOptions = [
 ];
 
 interface HomeSearchSceneObjectState extends SceneObjectState {
+  textVar: TextBoxVariable;
 }
 
 export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObjectState> {
   static Component = ({ model }: SceneComponentProps<HomeSearchSceneObject>) => {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
+    const [selectedNamespace, setSelectedNamespace] = useState<string>('all');
     const [selectedSort, setSelectedSort] = useState<string>('successRate');
 
     return (
       <Stack width={"100%"}>
         <Combobox
-          options={languageOptions}
-          onChange={(option) => setSelectedLanguage(option?.value || 'all')}
-          value={languageOptions.find(option => option.value === selectedLanguage)}
-          placeholder='Select Language'
+          options={namespaceOptions}
+          onChange={(option) => setSelectedNamespace(option?.value || 'all')}
+          value={namespaceOptions.find(option => option.value === selectedNamespace)}
+          placeholder='Select Namespace'
         />
         <Input
           prefix={<Icon name="search" />}
           style={{ width: '100%' }}
+          defaultValue={model.state.textVar.getValue().toString()}
+          onChange={(e) => model.onTextChange(e.currentTarget.value)}
           placeholder="Search services or enter Trace ID..."
         />
         <Combobox
@@ -68,5 +65,10 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
         </Button>
       </Stack>
     );
+  };
+
+  onTextChange = (text: string) => {
+    this.state.textVar.setState({ value: text });
+    this.publishEvent(new SceneVariableValueChangedEvent(this.state.textVar), true);
   };
 }

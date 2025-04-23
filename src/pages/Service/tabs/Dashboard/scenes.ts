@@ -1,7 +1,7 @@
 import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout } from "@grafana/scenes";
-import { DashboardsProps } from "./index";
+import { DashboardProps } from "./index";
 
-export const getDashboardsScene = (props: DashboardsProps) => {
+export const getDashboardScene = (props: DashboardProps) => {
     return new EmbeddedScene({
         controls: [],
         body: new SceneFlexLayout({
