@@ -1,6 +1,6 @@
 import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneTimePicker } from '@grafana/scenes';
 import { createTimeRangeVariable } from '../../common/variableHelpers';
-import { JsonData } from '../../components/AppConfig/AppConfig';
+import { ConfigProps } from '../../components/AppConfig/AppConfig';
 import { prefixRoute } from '../../utils/utils.routing';
 import { getOverviewPage } from './tabs/Overview';
 import { getLogSearchPage } from './tabs/LogSearch';
@@ -14,11 +14,11 @@ import { getAlertsPage } from './tabs/Alert';
 export type ServicePageProps = {
     routeMatch: SceneRouteMatch<{ service: string }>;
     parent: SceneAppPageLike;
-    jsonData: JsonData;
+    config: ConfigProps;
 }
 
 export const getServicePage = (props: ServicePageProps) => {
-    const { routeMatch, parent, jsonData } = props;
+    const { routeMatch, parent, config } = props;
     const { service } = routeMatch.params;
     return new SceneAppPage({
         title: service,
@@ -35,13 +35,13 @@ export const getServicePage = (props: ServicePageProps) => {
         url: prefixRoute(`/${service}`),
         routePath: `*`,
         tabs: [
-            getOverviewPage({ jsonData: jsonData, service: service }),
-            getTopologyPage({ jsonData: jsonData, service: service }),
-            getTraceAnalyticsPage({ jsonData: jsonData, service: service }),
-            getTraceSearchPage({ jsonData: jsonData, service: service }),
-            getLogSearchPage({ jsonData: jsonData, service: service }),
-            getDashboardPage({ jsonData: jsonData, service: service }),
-            getAlertsPage({ jsonData: jsonData, service: service })
+            getOverviewPage({ config: config, service: service }),
+            getTopologyPage({ config: config, service: service }),
+            getTraceAnalyticsPage({ config: config, service: service }),
+            getTraceSearchPage({ config: config, service: service }),
+            getLogSearchPage({ config: config, service: service }),
+            getDashboardPage({ config: config, service: service }),
+            getAlertsPage({ config: config, service: service })
         ]
     });
 }

@@ -1,6 +1,7 @@
-import { CustomVariable, SceneComponentProps, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
+import { SceneComponentProps, SceneObjectBase, SceneObjectState, TextBoxVariable, SceneVariableValueChangedEvent } from '@grafana/scenes';
 import { Button, Combobox, Icon, Input, Stack } from '@grafana/ui';
 import React, { useState } from 'react';
+import { debounce } from 'lodash';
 
 const namespaceOptions = [
   { value: 'all', label: 'All' },
@@ -12,8 +13,17 @@ const namespaceOptions = [
   { value: 'ingress-nginx', label: 'Ingress Nginx' },
 ];
 
+const sortOptions = [
+  { value: 'successRate', label: 'Sort by Success Rate' },
+  { value: 'eventCount', label: 'Sort by Event Count' },
+  { value: 'errorCount', label: 'Sort by Error Count' },
+];
+
 interface HomeSearchSceneObjectState extends SceneObjectState {
-  sortKeyVar: CustomVariable;
+  sortKeyVar: TextBoxVariable;
+  sortOrderVar: TextBoxVariable;
+  namespaceVar: TextBoxVariable;
+  keywordVar: TextBoxVariable;
 }
 
 export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObjectState> {
@@ -21,26 +31,42 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [selectedNamespace, setSelectedNamespace] = useState<string>('all');
     const [selectedSort, setSelectedSort] = useState<string>('successRate');
-    const { sortKeyVar } = model.state;
+
+    const handleKeywordChange = debounce((text: string) => model.onKeywordVarChange(text), 500);
+
     return (
       <Stack width={"100%"}>
         <Combobox
           options={namespaceOptions}
-          onChange={(option) => setSelectedNamespace(option?.value || 'all')}
-          value={namespaceOptions.find(option => option.value === selectedNamespace)}
-          placeholder='Select Namespace'
+          onChange={(option) => {
+            setSelectedNamespace(option?.value || 'all');
+            model.onNamespaceChange(option?.value || 'all');
+          }}
+          value={selectedNamespace}
+          placeholder='Select namespace to filter'
         />
         <Input
           prefix={<Icon name="search" />}
-          style={{ width: '100%' }}
-          // onChange={(e) => model.onTextChange(e.currentTarget.value)}
-          placeholder="Search services or enter Trace ID..."
+          onChange={(e) => handleKeywordChange(e.currentTarget.value)}
+          placeholder="Search by service name or trace ID..."
         />
-        <sortKeyVar.Component model={sortKeyVar} />
+        <Combobox
+          options={sortOptions}
+          onChange={(option) => {
+            if (option.value) {
+              setSelectedSort(option.value);
+              model.onSortKeyChange(option.value);
+            }
+          }}
+          value={selectedSort}
+          width={23}
+          placeholder='Select sorting criteria'
+        />
         <Button
           variant="secondary"
           onClick={() => {
             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            model.onSortOrderChange(sortOrder === 'asc' ? 'desc' : 'asc');
           }}
         >
           <Icon
@@ -54,8 +80,23 @@ export class HomeSearchSceneObject extends SceneObjectBase<HomeSearchSceneObject
     );
   };
 
-  // onTextChange = (text: string) => {
-  //   this.state.textVar.setState({ value: text });
-  //   this.publishEvent(new SceneVariableValueChangedEvent(this.state.textVar), true);
-  // };
+  onKeywordVarChange = (text: string) => {
+    this.state.keywordVar.setState({ value: text });
+    this.publishEvent(new SceneVariableValueChangedEvent(this.state.keywordVar), true);
+  };
+
+  onNamespaceChange = (namespace: string) => {
+    this.state.namespaceVar.setState({ value: namespace });
+    this.publishEvent(new SceneVariableValueChangedEvent(this.state.namespaceVar), true);
+  };
+
+  onSortOrderChange = (sortOrder: 'asc' | 'desc') => {
+    this.state.sortOrderVar.setState({ value: sortOrder });
+    this.publishEvent(new SceneVariableValueChangedEvent(this.state.sortOrderVar), true);
+  };
+
+  onSortKeyChange = (sortKey: string) => {
+    this.state.sortKeyVar.setState({ value: sortKey });
+    this.publishEvent(new SceneVariableValueChangedEvent(this.state.sortKeyVar), true);
+  }
 }

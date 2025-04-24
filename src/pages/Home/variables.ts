@@ -1,16 +1,26 @@
-import { CustomVariable } from "@grafana/scenes";
+import { TextBoxVariable } from "@grafana/scenes";
 
+
+export const createNamespaceVariable = () => {
+    return new TextBoxVariable({
+        name: 'namespace'
+    });
+}
 
 export const createSortKeyVariable = () => {
-    const sortOptions = [
-        { value: 'successRate', label: 'Sort by Success Rate' },
-        { value: 'eventCount', label: 'Sort by Event Count' },
-        { value: 'errorCount', label: 'Sort by Error Count' },
-    ];
+    return new TextBoxVariable({
+        name: 'sortKey'
+    });
+}
 
+export const createSortOrderVariable = () => {
+    return new TextBoxVariable({
+        name: 'sortOrder'
+    });
+}
 
-    return new CustomVariable({
-        name: 'sortKey',
-        query: `${sortOptions.map(option => `${option.label} : ${option.value}`).join(', ')}`
+export const createKeywordVariable = () => {
+    return new TextBoxVariable({
+        name: 'keyword'
     });
 }

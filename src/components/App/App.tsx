@@ -4,11 +4,11 @@ import { Alert } from '@grafana/ui';
 import React, { useMemo } from 'react';
 import { getHomePage } from '../../pages/Home';
 import { PluginPropsContext, usePluginJsonData } from '../../utils/utils.plugin';
-import { JsonData } from '../AppConfig/AppConfig';
+import { ConfigProps } from '../AppConfig/AppConfig';
 
-function getSceneApp(jsonData: JsonData) {
+function getSceneApp(config: ConfigProps) {
   return new SceneApp({
-    pages: [getHomePage(jsonData)],
+    pages: [getHomePage(config)],
     urlSyncOptions: {
       updateUrlOnInit: true,
       createBrowserHistorySteps: true,
@@ -19,8 +19,11 @@ function getSceneApp(jsonData: JsonData) {
 function AppWithScenes() {
   const jsonData = usePluginJsonData();
   const scene = useMemo(() => {
-    if (jsonData) {
-      return getSceneApp(jsonData);
+    if (jsonData && jsonData.datasourceUid && jsonData.folderUid) {
+      return getSceneApp({
+        datasourceUid: jsonData.datasourceUid,
+        folderUid: jsonData.folderUid
+      });
     }
     return;
   }, [jsonData]);

@@ -13,6 +13,11 @@ import { lastValueFrom } from 'rxjs';
 
 const supportedDataSourceTypes = ['grafana-clickhouse-datasource']
 
+export type ConfigProps = {
+    datasourceUid: string;
+    folderUid: string;
+}
+
 export type JsonData = {
     datasourceUid?: string;
     folderUid?: string;

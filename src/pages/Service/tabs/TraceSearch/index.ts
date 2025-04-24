@@ -1,11 +1,11 @@
 import { behaviors, SceneAppPage } from "@grafana/scenes";
-import { JsonData } from "../../../../components/AppConfig/AppConfig";
+import { ConfigProps } from "../../../../components/AppConfig/AppConfig";
 import { prefixRoute } from "../../../../utils/utils.routing";
 import { getTraceSearchScene } from "./scenes";
 
 export type TraceSearchProps = {
     service: string;
-    jsonData: JsonData;
+    config: ConfigProps;
 }
 
 export const getTraceSearchPage = (props: TraceSearchProps) => {

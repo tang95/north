@@ -1,23 +1,25 @@
 import {
-  CustomVariable,
   EmbeddedScene,
   SceneVariableSet,
-  TextBoxVariable,
-  VariableValueSelectors
 } from '@grafana/scenes';
-import { JsonData } from '../../components/AppConfig/AppConfig';
+import { ConfigProps } from '../../components/AppConfig/AppConfig';
 import { HomeContentSceneObject } from './components/HomeContentSceneObject';
 import { HomeSearchSceneObject } from './components/HomeSearchSceneObject';
-import { createSortKeyVariable } from './variables';
+import { createServiceListQueries } from './queries';
+import { createKeywordVariable, createNamespaceVariable, createSortKeyVariable, createSortOrderVariable } from './variables';
 
-export function homeScene(jsonData: JsonData) {
+export function homeScene(config: ConfigProps) {
   const sortKeyVar = createSortKeyVariable();
+  const sortOrderVar = createSortOrderVariable();
+  const namespaceVar = createNamespaceVariable();
+  const keywordVar = createKeywordVariable();
+  const serviceListQueries = createServiceListQueries(config.datasourceUid);
 
   return new EmbeddedScene({
-    $variables: new SceneVariableSet({ variables: [sortKeyVar] }),
+    $variables: new SceneVariableSet({ variables: [sortKeyVar, sortOrderVar, namespaceVar, keywordVar] }),
     controls: [
-      new HomeSearchSceneObject({ sortKeyVar })
+      new HomeSearchSceneObject({ sortKeyVar, sortOrderVar, namespaceVar, keywordVar })
     ],
-    body: new HomeContentSceneObject({}),
+    body: new HomeContentSceneObject({$data: serviceListQueries}),
   });
 }
