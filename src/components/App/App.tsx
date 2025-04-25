@@ -28,10 +28,10 @@ function AppWithScenes() {
     return;
   }, [jsonData]);
   
-  if (!jsonData) {
+  if (!jsonData || !jsonData.datasourceUid || !jsonData.folderUid) {
     return (
       <Alert title={`Configuration Missing`}>
-        Please configure the application to proceed.
+        Please configure the plugin to proceed.
       </Alert>
     );
   }

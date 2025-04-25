@@ -33,6 +33,7 @@ export const getServicePage = (props: ServicePageProps) => {
         ],
         getParentPage: () => parent,
         url: prefixRoute(`/${service}`),
+        preserveUrlKeys: ['to', 'from'],
         routePath: `*`,
         tabs: [
             getOverviewPage({ config: config, service: service }),

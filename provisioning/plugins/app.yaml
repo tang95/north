@@ -6,7 +6,5 @@ apps:
     org_name: 'tang95'
     disabled: false
     jsonData:
-      apiUrl: http://default-url.com
-      isApiKeySet: true
-    secureJsonData:
-      apiKey: secret-key
+      datasourceUid: 'north'
+      folderUid: 'north'

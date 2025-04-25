@@ -5,6 +5,7 @@ import pluginJson from '../../plugin.json';
 import { prefixRoute } from '../../utils/utils.routing';
 import { getServicePage } from '../Service';
 import { homeScene } from './scenes';
+import { getTraceDetailPage } from '../Trace';
 
 
 export const getHomePage = (config: ConfigProps) => {
@@ -31,6 +32,10 @@ export const getHomePage = (config: ConfigProps) => {
         routePath: ':service/*',
         getPage: (routeMatch, parent) => getServicePage({ routeMatch, parent, config }),
       },
+      {
+        routePath: 'trace/:traceId',
+        getPage: (routeMatch, parent) => getTraceDetailPage({ routeMatch, parent, config }),
+      }
     ],
   });
 }
