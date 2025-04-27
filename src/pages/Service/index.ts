@@ -1,15 +1,15 @@
-import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneTimePicker } from '@grafana/scenes';
+import { behaviors, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneTimePicker } from '@grafana/scenes';
 import { createTimeRangeVariable } from '../../common/variableHelpers';
 import { ConfigProps } from '../../components/AppConfig/AppConfig';
 import { prefixRoute } from '../../utils/utils.routing';
-import { getOverviewPage } from './tabs/Overview';
-import { getLogSearchPage } from './tabs/LogSearch';
-import { getTopologyPage } from './tabs/Topology';
-import { getTraceSearchPage } from './tabs/TraceSearch';
-import { getTraceAnalyticsPage } from './tabs/TraceAnalytics';
-import { getDashboardPage } from './tabs/Dashboard';
+import { ServiceLayout } from './components/ServiceLayout';
 import { getAlertsPage } from './tabs/Alert';
-
+import { getDashboardPage } from './tabs/Dashboard';
+import { getLogSearchPage } from './tabs/LogSearch';
+import { getOverviewPage } from './tabs/Overview';
+import { getTopologyPage } from './tabs/Topology';
+import { getTraceAnalyticsPage } from './tabs/TraceAnalytics';
+import { getTraceSearchPage } from './tabs/TraceSearch';
 
 export type ServicePageProps = {
     routeMatch: SceneRouteMatch<{ service: string }>;
@@ -20,8 +20,11 @@ export type ServicePageProps = {
 export const getServicePage = (props: ServicePageProps) => {
     const { routeMatch, parent, config } = props;
     const { service } = routeMatch.params;
-    return new SceneAppPage({
+
+    return new ServiceLayout({
         title: service,
+        service: service,
+        config: config,
         $timeRange: createTimeRangeVariable(),
         $behaviors: [new behaviors.SceneQueryController()],
         controls: [
@@ -35,14 +38,14 @@ export const getServicePage = (props: ServicePageProps) => {
         url: prefixRoute(`/${service}`),
         preserveUrlKeys: ['to', 'from'],
         routePath: `*`,
-        tabs: [
-            getOverviewPage({ config: config, service: service }),
-            getTopologyPage({ config: config, service: service }),
-            getTraceAnalyticsPage({ config: config, service: service }),
-            getTraceSearchPage({ config: config, service: service }),
-            getLogSearchPage({ config: config, service: service }),
-            getDashboardPage({ config: config, service: service }),
-            getAlertsPage({ config: config, service: service })
+        serviceTabs: [
+            (folderUid: string) => getOverviewPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getTopologyPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getTraceAnalyticsPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getTraceSearchPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getLogSearchPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getDashboardPage({ config: config, service: service, folderUid: folderUid }),
+            (folderUid: string) => getAlertsPage({ config: config, service: service, folderUid: folderUid })
         ]
     });
 }

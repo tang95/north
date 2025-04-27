@@ -6,6 +6,7 @@ import { getTraceAnalyticsScene } from "./scenes";
 export type TraceAnalyticsProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getTraceAnalyticsPage = (props: TraceAnalyticsProps) => {

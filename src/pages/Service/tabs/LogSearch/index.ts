@@ -6,6 +6,7 @@ import { getLogSearchScene } from "./scenes";
 export type LogSearchProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getLogSearchPage = (props: LogSearchProps) => {

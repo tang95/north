@@ -6,6 +6,7 @@ import { getTraceSearchScene } from "./scenes";
 export type TraceSearchProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getTraceSearchPage = (props: TraceSearchProps) => {

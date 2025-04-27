@@ -6,6 +6,7 @@ import { getTopologyScene } from "./scenes";
 export type TopologyProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getTopologyPage = (props: TopologyProps) => {

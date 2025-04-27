@@ -6,6 +6,7 @@ import { getDashboardScene } from "./scenes";
 export type DashboardProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getDashboardPage = (props: DashboardProps) => {

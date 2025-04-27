@@ -5,6 +5,7 @@ import { getAlertsScene } from "./scenes";
 
 export type AlertsProps = {
     service: string;
+    folderUid: string;
     config: ConfigProps;
 }
 

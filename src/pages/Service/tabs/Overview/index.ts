@@ -6,6 +6,7 @@ import { getOverviewScene } from "./scenes";
 export type OverviewProps = {
     service: string;
     config: ConfigProps;
+    folderUid: string;
 }
 
 export const getOverviewPage = (props: OverviewProps) => {
