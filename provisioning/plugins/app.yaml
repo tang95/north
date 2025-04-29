@@ -7,4 +7,3 @@ apps:
     disabled: false
     jsonData:
       datasourceUid: 'north'
-      folderUid: 'north'

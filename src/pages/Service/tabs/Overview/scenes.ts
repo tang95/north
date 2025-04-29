@@ -134,6 +134,14 @@ const createAlertListRow = (folderUid: string) => {
                     title: "Alerts",
                     pluginId: "alertlist",
                     options: {
+                        stateFilter: {
+                            firing: true,
+                            pending: true,
+                            recovering: true,
+                            noData: true,
+                            normal: true,
+                            error: true
+                        },
                         folder: {
                             uid: folderUid
                         }

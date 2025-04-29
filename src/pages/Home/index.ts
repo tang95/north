@@ -1,6 +1,6 @@
 import { behaviors, SceneAppPage, SceneRefreshPicker, SceneTimePicker } from '@grafana/scenes';
-import { createTimeRangeVariable } from 'common/variableHelpers';
-import { ConfigProps } from 'components/AppConfig/AppConfig';
+import { createTimeRangeVariable } from '../../utils/utils.variables';
+import { ConfigProps } from '../../components/AppConfig/AppConfig';
 import pluginJson from '../../plugin.json';
 import { prefixRoute } from '../../utils/utils.routing';
 import { getServicePage } from '../Service';

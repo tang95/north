@@ -1,5 +1,5 @@
 import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneVariableSet, VariableValueSelectors } from '@grafana/scenes';
-import { createTimeRangeVariable } from '../../common/variableHelpers';
+import { createTimeRangeVariable } from '../../utils/utils.variables';
 import { ConfigProps } from '../../components/AppConfig/AppConfig';
 import { prefixRoute } from '../../utils/utils.routing';
 import { traceDetailScene } from './scenes';

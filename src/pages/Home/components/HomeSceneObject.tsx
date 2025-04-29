@@ -3,15 +3,18 @@ import { locationService } from '@grafana/runtime';
 import { SceneComponentProps, sceneGraph, SceneObjectBase, SceneObjectState } from '@grafana/scenes';
 import { Grid, ScrollContainer, Stack } from '@grafana/ui';
 import React, { useEffect, useState } from 'react';
-import { prefixRoute } from 'utils/utils.routing';
+import { prefixRoute } from '../../../utils/utils.routing';
 import HomeSearchBar from './HomeSearchBar';
 import ServiceCard, { ServiceCardProps } from './ServiceCard';
+import { ConfigProps } from '../../../components/AppConfig/AppConfig';
 
 interface HomeSceneObjectState extends SceneObjectState {
+  config: ConfigProps;
 }
 
 export class HomeSceneObject extends SceneObjectBase<HomeSceneObjectState> {
   static Component = ({ model }: SceneComponentProps<HomeSceneObject>) => {
+    const { config } = model.useState();
     const { data } = sceneGraph.getData(model).useState();
     const [services, setServices] = useState<ServiceCardProps[]>([]);
     const [filteredServices, setFilteredServices] = useState<ServiceCardProps[]>([]);
@@ -78,11 +81,12 @@ export class HomeSceneObject extends SceneObjectBase<HomeSceneObjectState> {
           requestCount: totalValues[index],
           errorCount: errorCountValues[index],
           language: languageValues[index],
-          namespace: namespaceValues[index]
+          namespace: namespaceValues[index],
+          config: config
         }));
         setServices(serviceList);
       }
-    }, [data, getServiceUrl]);
+    }, [data, getServiceUrl, config]);
 
     useEffect(() => {
       if (data) {
