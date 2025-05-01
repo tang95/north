@@ -10,7 +10,7 @@ connectors:
   spanmetrics:
     exemplars:
       enabled: true
-    aggregation_temporality: "AGGREGATION_TEMPORALITY_DELTA"    
+    aggregation_temporality: 'AGGREGATION_TEMPORALITY_DELTA'
     metrics_flush_interval: 15s
     metrics_expiration: 5m
     resource_metrics_key_attributes:
@@ -18,7 +18,6 @@ connectors:
       - telemetry.sdk.language
 
   servicegraph:
-
 
 processors:
   batch:
