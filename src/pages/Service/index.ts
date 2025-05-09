@@ -1,7 +1,7 @@
 import { behaviors, SceneAppPage, SceneAppPageLike, SceneRefreshPicker, SceneRouteMatch, SceneTimePicker } from '@grafana/scenes';
 import { createTimeRangeVariable } from '../../utils/utils.variables';
 import { ConfigProps } from '../../components/AppConfig/AppConfig';
-import { getFolderUid } from '../../utils/urls.helper';
+import { getUrlParams } from '../../utils/utils.url';
 import { prefixRoute } from '../../utils/utils.routing';
 import { getAlertsPage } from './tabs/Alert';
 import { getDashboardPage } from './tabs/Dashboard';
@@ -10,6 +10,7 @@ import { getOverviewPage } from './tabs/Overview';
 import { getTopologyPage } from './tabs/Topology';
 import { getTraceAnalyticsPage } from './tabs/TraceAnalytics';
 import { getTraceSearchPage } from './tabs/TraceSearch';
+import { getLanguageIconUrl } from '../../utils/utils.icon';
 
 export type ServicePageProps = {
     routeMatch: SceneRouteMatch<{ service: string }>;
@@ -20,10 +21,11 @@ export type ServicePageProps = {
 export const getServicePage = (props: ServicePageProps) => {
     const { routeMatch, parent, config } = props;
     const { service } = routeMatch.params;
-    const folderUid = getFolderUid();
+    const { folderUid, language } = getUrlParams();
 
     return new SceneAppPage({
         title: service,
+        titleImg: getLanguageIconUrl(language),
         $timeRange: createTimeRangeVariable(),
         $behaviors: [new behaviors.SceneQueryController()],
         controls: [
