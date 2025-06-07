@@ -2,12 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "North",
-  "id": "tang95-north-app",
+  "id": "northo11y-north-app",
   "info": {
     "keywords": ["app"],
     "description": "",
     "author": {
-      "name": "Tang95"
+      "name": "northo11y"
     },
     "logos": {
       "small": "img/logo.svg",

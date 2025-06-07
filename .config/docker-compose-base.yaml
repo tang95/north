@@ -19,15 +19,15 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ../dist:/var/lib/grafana/plugins/tang95-north-app
+      - ../dist:/var/lib/grafana/plugins/northo11y-north-app
       - ../provisioning:/etc/grafana/provisioning
       - ./grafana.ini:/etc/grafana/grafana.ini
-      - ..:/root/tang95-north-app
+      - ..:/root/northo11y-north-app
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.tang95-north-app:debug
+      GF_LOG_FILTERS: plugin.northo11y-north-app:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: tang95-north-app
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: northo11y-north-app
       GF_PLUGINS_PREINSTALL: grafana-clickhouse-datasource
