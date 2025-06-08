@@ -1,15 +1,17 @@
 import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout, SceneVariableSet } from "@grafana/scenes";
 import { TraceAnalyticsProps } from "./index";
-import { MetricQueryVariable } from "variables/MetricQueryVariable";
+import { TableQueryVariable } from "variables/TableQueryVariable";
 
 export const getTraceAnalyticsScene = (props: TraceAnalyticsProps) => {
-    const metricQueryVariable = new MetricQueryVariable({
+    const metricQueryVariable = new TableQueryVariable({
         name: 'metricQuery',
-        value: '',
+        table: 'otel_metrics',
+        config: props.config,
+        type: 'textbox'
     });
     return new EmbeddedScene({
         $variables: new SceneVariableSet({
-            variables: [ metricQueryVariable ]
+            variables: [metricQueryVariable]
         }),
         controls: [
             metricQueryVariable

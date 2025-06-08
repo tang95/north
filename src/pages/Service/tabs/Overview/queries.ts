@@ -8,17 +8,16 @@ export const createCountQuery = (datasourceUid: string, service: string) => new 
       datasource: { uid: datasourceUid },
       queryType: "table",
       rawSql: `
-  SELECT 
-    sumIf(Value, Attributes['status.code'] == 'STATUS_CODE_ERROR') AS Errors,
-    sum(Value)                                                     AS Total,
-    (Total - Errors) / Total                                       AS SuccessRate
-  FROM otel_metrics_sum 
-  WHERE MetricName = 'traces.span.metrics.calls'
-    AND TimeUnix >= $__fromTime 
-    AND TimeUnix <= $__toTime
-    AND Attributes['service.name'] = '${service}'
-  ORDER BY Total DESC
-  `
+SELECT 
+  countMergeIf(t.Total, StatusCode == 'Error') AS Errors,
+  countMerge(t.Total) AS Total,
+  1 - Errors / Total AS SuccessRate
+FROM otel_span_analysis_agg as t
+WHERE Timestamp >= $__fromTime
+  AND Timestamp <= $__toTime
+  AND ResourceAttributes['service.name'] = '${service}'
+ORDER BY Total DESC
+`
     }
   ]
 });
@@ -31,15 +30,14 @@ export const createTimeSeriesQuery = (datasourceUid: string, service: string) =>
       queryType: "timeseries",
       rawSql: `
 SELECT 
-  $__timeInterval(TimeUnix)                                      AS Time,
-  sumIf(Value, Attributes['status.code'] == 'STATUS_CODE_ERROR') AS Errors,
-  sum(Value)                                                     AS Total,
-  (Total - Errors) / Total                                       AS SuccessRate
-FROM otel_metrics_sum
-WHERE MetricName = 'traces.span.metrics.calls'
-  AND TimeUnix >= $__fromTime 
-  AND TimeUnix <= $__toTime
-  AND Attributes['service.name'] = '${service}'
+  $__timeInterval(Timestamp)                                      AS Time,
+  countMergeIf(t.Total, StatusCode == 'Error') AS Errors,
+  countMerge(t.Total) AS Total,
+  1 - Errors / Total AS SuccessRate
+FROM otel_span_analysis_agg as t
+WHERE Timestamp >= $__fromTime
+  AND Timestamp <= $__toTime
+  AND ResourceAttributes['service.name'] = '${service}'
 GROUP BY Time
 ORDER BY Time ASC
 `

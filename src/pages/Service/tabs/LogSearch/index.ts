@@ -16,6 +16,7 @@ export const getLogSearchPage = (props: LogSearchProps) => {
         $behaviors: [new behaviors.SceneQueryController()],
         url: prefixRoute(`/${service}/log-search`),
         routePath: 'log-search',
+        preserveUrlKeys: ['from', 'to', 'timezone', 'namespace', 'folderUid', 'var-logQuery'],
         getScene: () => getLogSearchScene(props)
     });
 }

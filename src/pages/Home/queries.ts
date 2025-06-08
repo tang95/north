@@ -9,16 +9,15 @@ export const createHomeQueries = (datasourceUid: string) => new SceneQueryRunner
       queryType: "table",
       rawSql: `
 SELECT 
-  Attributes['service.name'] AS Service, 
+  ResourceAttributes['service.name'] AS Service, 
   ResourceAttributes['telemetry.sdk.language'] AS Language,
   ResourceAttributes['service.namespace'] AS Namespace,
-  sumIf(Value, Attributes['status.code'] == 'STATUS_CODE_ERROR') AS Errors,
-  sum(Value) AS Total,
+  countMergeIf(t.Total, StatusCode == 'Error') AS Errors,
+  countMerge(t.Total) AS Total,
   1 - Errors / Total AS SuccessRate
-FROM otel_metrics_sum 
-WHERE MetricName = 'traces.span.metrics.calls'
-  AND TimeUnix >= $__fromTime 
-  AND TimeUnix <= $__toTime
+FROM otel_span_analysis_agg as t
+WHERE Timestamp >= $__fromTime
+  AND Timestamp <= $__toTime
 GROUP BY Service, Language, Namespace
 ORDER BY Total DESC
 `
@@ -28,15 +27,17 @@ ORDER BY Total DESC
       datasource: { uid: datasourceUid },
       queryType: "table",
       rawSql: `
-SELECT 
-ResourceAttributes['service.namespace'] AS Namespace, 
-sum(Value) AS Total
-FROM otel_metrics_sum 
-WHERE MetricName = 'traces.span.metrics.calls'
-AND TimeUnix >= $__fromTime 
-AND TimeUnix <= $__toTime
-GROUP BY Namespace
-ORDER BY Total DESC
+SELECT
+  ResourceAttributes['service.namespace'] AS Namespace,
+  countMerge(Total) AS Total
+FROM
+  otel_span_analysis_agg
+WHERE Timestamp >= $__fromTime
+  AND Timestamp <= $__toTime
+GROUP BY
+  Namespace
+ORDER BY
+  Total DESC
 `
     }
   ]

@@ -74,6 +74,8 @@ export class HomeSceneObject extends SceneObjectBase<HomeSceneObjectState> {
           .filter((field) => field.name === 'Namespace')
           .map((field) => field.values)
           .flat()
+          .map((value: string) => value.trim())
+          .map((value: string) => value === '' ? 'unknown' : value)
         const serviceList = nameValues.map((value, index) => ({
           service: value,
           targetUrl: getServiceUrl(value),
@@ -97,6 +99,8 @@ export class HomeSceneObject extends SceneObjectBase<HomeSceneObjectState> {
           .filter((field) => field.name === 'Namespace')
           .map((field) => field.values)
           .flat()
+          .map((value: string) => value.trim())
+          .map((value: string) => value === '' ? 'unknown' : value)
         setNamespaces(namespaceValues);
       }
     }, [data]);

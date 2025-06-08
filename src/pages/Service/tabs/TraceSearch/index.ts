@@ -16,6 +16,7 @@ export const getTraceSearchPage = (props: TraceSearchProps) => {
         $behaviors: [new behaviors.SceneQueryController()],
         url: prefixRoute(`/${service}/trace-search`),
         routePath: 'trace-search',
+        preserveUrlKeys: ['from', 'to', 'timezone', 'namespace', 'folderUid', 'var-traceQuery'],
         getScene: () => getTraceSearchScene(props)
     });
 }

@@ -16,6 +16,7 @@ export const getTraceAnalyticsPage = (props: TraceAnalyticsProps) => {
         $behaviors: [new behaviors.SceneQueryController()],
         url: prefixRoute(`/${service}/trace-analytics`),
         routePath: 'trace-analytics',
+        preserveUrlKeys: ['from', 'to', 'timezone', 'namespace', 'folderUid', 'var-metricQuery'],
         getScene: () => getTraceAnalyticsScene(props)
     });
 }

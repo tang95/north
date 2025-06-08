@@ -1,17 +1,17 @@
-import { VariableHide } from "@grafana/data";
 import { EmbeddedScene, PanelBuilders, SceneFlexItem, SceneFlexLayout, SceneVariableSet } from "@grafana/scenes";
-import { TraceQueryVariable } from "variables/TraceQueryVariable";
+import { TableQueryVariable } from "variables/TableQueryVariable";
 import { TraceSearchProps } from "./index";
 export const getTraceSearchScene = (props: TraceSearchProps) => {
-    const traceQueryVariable = new TraceQueryVariable({
+    const traceQueryVariable = new TableQueryVariable({
         name: 'traceQuery',
-        hide: VariableHide.hideLabel,
+        table: 'otel_metrics',
         config: props.config,
         type: 'textbox'
     });
+
     return new EmbeddedScene({
         $variables: new SceneVariableSet({
-            variables: [ traceQueryVariable ]
+            variables: [traceQueryVariable]
         }),
         controls: [
             traceQueryVariable
