@@ -1,14 +1,20 @@
 import { SceneComponentProps } from "@grafana/scenes";
 import { CodeEditor, InlineField, Monaco, MonacoEditor, monacoTypes, useTheme2 } from "@grafana/ui";
+import { getDataSourceSrv } from "@grafana/runtime";
 import React from "react";
 import { TableQueryVariable } from "./variable";
-import { GrafanaTheme2 } from "@grafana/data";
+import { DataSourceApi, GrafanaTheme2 } from "@grafana/data";
 import { css } from "@emotion/css";
+import { fetchSuggestions } from "./queries";
 
 const options: monacoTypes.editor.IStandaloneEditorConstructionOptions = {
     fontSize: 14,
     scrollBeyondLastLine: false,
     renderLineHighlight: 'none',
+    scrollbar: {
+        vertical: 'hidden',
+        horizontal: 'hidden',
+    },
 };
 
 /**
@@ -32,10 +38,44 @@ const setupEditorAutoResize = (
     handleResize();
 };
 
+/**
+ * 设置编辑器自动补全
+ * @param editor 编辑器实例
+ * @param table 表名
+ * @param datasourceUid 数据源UID
+ */
+const setupEditorSuggestions = (editor: MonacoEditor, monaco: typeof monacoTypes, table: string, datasource: Promise<DataSourceApi>) => {
+    datasource.then(async datasource => {
+        monaco.languages.registerCompletionItemProvider('sql', {
+            triggerCharacters: ['.', ' '],
+            provideCompletionItems: async (model, position) => {
+                const word = model.getWordUntilPosition(position);
+                const range: monacoTypes.IRange = {
+                    startLineNumber: position.lineNumber,
+                    endLineNumber: position.lineNumber,
+                    startColumn: word.startColumn,
+                    endColumn: word.endColumn,
+                };
+
+                return await fetchSuggestions(model.getValue(), range, model.getOffsetAt(position), table, datasource);
+            },
+        });
+    });
+}
 
 export const TableQueryVariableRenderer = ({ model }: SceneComponentProps<TableQueryVariable>) => {
     const theme = useTheme2();
     const styles = getStyles(theme, 'Enter query conditions... (Press Ctrl + Enter to search)');
+    const { table, config, value } = model.useState();
+    const datasource = getDataSourceSrv().get(config.datasourceUid);
+
+    const handleRunQuery = (editor: MonacoEditor) => {
+        const value = editor.getValue().trim();
+        if (value === '') {
+            return;
+        }
+        model.setValue(value);
+    };
 
     const setPlaceholder = (monaco: Monaco, editor: MonacoEditor) => {
         const placeholderDecorators = [
@@ -64,19 +104,9 @@ export const TableQueryVariableRenderer = ({ model }: SceneComponentProps<TableQ
     };
 
     const handleMount = (editor: monacoTypes.editor.IStandaloneCodeEditor, monaco: typeof monacoTypes) => {
-        // const me = registerSQL('sql', editor, _getSuggestions);
         setupEditorAutoResize(editor);
-
-        editor.addAction({
-            id: 'run-query',
-            label: 'Run Query',
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
-            run: (editor: monacoTypes.editor.IStandaloneCodeEditor) => {
-                console.log(editor.getValue());
-                // saveChanges({ rawSql: editor.getValue() });
-                // props.onRunQuery();
-            },
-        });
+        setupEditorSuggestions(editor, monaco, table, datasource);
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => handleRunQuery(editor));
 
         setPlaceholder(monaco, editor)
     };
@@ -84,7 +114,7 @@ export const TableQueryVariableRenderer = ({ model }: SceneComponentProps<TableQ
     return (
         <InlineField label="WHERE" grow>
             <CodeEditor
-                value={""}
+                value={value || ''}
                 language={"sql"}
                 onEditorDidMount={handleMount}
                 showLineNumbers={false}
