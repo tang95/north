@@ -1,6 +1,3 @@
 {
-  "version": "5.19.2",
-  "features": {
-    "useReactRouterV6": true
-  }
+  "version": "5.25.1"
 }
